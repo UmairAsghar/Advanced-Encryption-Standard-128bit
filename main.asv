@@ -1,0 +1,76 @@
+% Advanced Encryption Standard (AES);
+% Naina - Umair - Sheroz
+% Main module:
+function s = main
+    clc
+    clear all
+% -------------------------------------------------------------------------
+% Image Input:
+% -------------------------------------------------------------------------
+    prompt = 'Press 1-Image and 2-Matrix ? ';
+    result = input(prompt);
+
+    if(result == 1)
+        Ind = 1;
+        img=uigetfile();   
+        A=imread(img);
+        A=imresize(A,[64,64]);
+        X=A(:,:,1);
+        div=4;
+        [a b] = size(X) 
+        for i=1:div:a
+            for j=1:div:b
+                X((i:i+div-1),(j:j+div-1))=encryption(X((i:i+div-1),(j:j+div-1)),Ind);
+            end
+        end
+        figure('Name','Encrypted Image','NumberTitle','off');
+        imshow(X);
+
+        for i=1:div:a
+            for j=1:div:b
+                X((i:i+div-1),(j:j+div-1))=decryption(X((i:i+div-1),(j:j+div-1)),Ind);
+            end
+        end  
+
+        figure('Name','Recovered Image','NumberTitle','off');
+        imshow(X);
+
+    else
+% -------------------------------------------------------------------------
+% 4*4 Matrix Input:
+% -------------------------------------------------------------------------
+    Ind = 0;
+    %{
+    iState={
+       '32','88','31','E0';
+       '43','5A','31','37';
+       'F6','30','98','07';
+       'A8','8D','A2','34'
+       }; 
+    %}
+    msg={
+       '00','44','88','CC';
+       '11','55','99','DD';
+       '22','66','AA','EE';
+       '33','77','BB','FF'
+       };
+
+    key={
+       '00' '04' '08' '0C';
+       '01' '05' '09' '0D';
+       '02' '06' '0A' '0E';
+       '03' '07' '0B' '0F';
+       };
+    %{
+    cipherKey={
+       '2B' '28' 'AB' '09';
+       '7E' 'AE' 'F7' 'CF';
+       '15' 'D2' '15' '4F';
+       '16' 'A6' '88' '3C';
+       };
+   
+    cipherText = encryption(iState);
+    plainText = decryption(cipherText);
+
+    end
+end

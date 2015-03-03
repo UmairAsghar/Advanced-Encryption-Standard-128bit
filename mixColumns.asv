@@ -1,0 +1,52 @@
+%MixColumns;
+A={
+    'd4' 'e0' 'b8' '1e';  
+    'bf' 'b4' '41' '27'; %A(2,1)*B(1,2) A(2,1)*B(2,2)  
+    '5d' '52' '11' '98'; %A(3,1)*B(1,3) A(3,1)*B(2,3)
+    '30' 'ae' 'f1' 'e5'  %A(4,1)*B(1,4) A(4,1)*B(2,4)
+  };
+    % 4   224  72  40
+    % 102 203  248 6
+    % 129 25   211 38
+    % 229 154  122 76
+B=  {
+    '02' '03' '01' '01';                           
+    '01' '02' '03' '01';
+    '01' '01' '02' '03';
+    '03' '01' '01' '02'
+  };
+%--------------------------------------------------------------------------
+for k=1:4
+    for i=1:4
+        sum = 0;
+        for j=1:4
+            if (B{i,j} == '01')
+                A_bin=hex2bin(A{j,k},4);
+                A_dec = uhex2dec(A_bin(:,:));
+                e=A_dec;
+            elseif (B{i,j}== '02')
+                A_bin = hex2bin(A{j,k},4);
+                B_bin = hex2bin(B{k,j},4);
+                A_dec = uhex2dec(A_bin(:,:));
+                A_sh = bitshift(uint8(A_dec),1);
+                if(A_bin(1,1)=='1')
+                    e=bitxor(uint8(A_sh),uint8(27));
+                else
+                    e=A_sh;
+                end
+            else 
+                A_bin = hex2bin(A{j,k},4);
+                A_dec = uhex2dec(A_bin(:,:));
+                A_sh = bitshift(uint8(A_dec),1);
+                if(A_bin(1,1)=='1')
+                    ee=bitxor(uint8(A_sh),uint8(27));
+                    e=bitxor(ee,A_dec);
+                else
+                    e=bitxor(A_sh,A_dec); 
+                end 
+            end
+            sum = bitxor(e,sum);
+        end
+        R(i,k)= sum;
+    end
+end

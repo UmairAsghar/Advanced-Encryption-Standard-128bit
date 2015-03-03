@@ -1,0 +1,26 @@
+function r=addRoundKey(state,roundkey)
+   
+  %{ 
+   state={
+           '04' 'e0' '48' '28';
+           '66' 'cb' 'f8' '06';
+           '81' '19' 'd3' '26';
+           'e5' '9a' '7a' '4c'
+         
+          };
+     
+   roundkey={
+            'a0' '88' '23' '2a';
+            'fa' '54' 'a3' '6c';
+            'fe' '2c' '39' '76';
+            '17' 'b1' '39' '05'
+   };
+   %}
+   for i=1:4
+       for j=1:4
+             R(i,j)=bitxor(hex2dec(state{i,j}),hex2dec(roundkey{i,j}));
+       end
+   end
+   r=dec2hex(R)
+    
+end
